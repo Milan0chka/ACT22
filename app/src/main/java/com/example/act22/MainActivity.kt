@@ -24,10 +24,10 @@ class MainActivity : ComponentActivity() {
                     composable(StartPage){
                         CreateStart(navController)
                     }
-                    composable(SingInPage) {
+                    composable(SignInPage) {
                         CreateSingIn(navController)
                     }
-                    composable(SingUpPage) {
+                    composable(SignUpPage) {
                         CreateSingUp(navController)
                     }
                     composable(MainPage) {

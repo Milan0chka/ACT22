@@ -1,6 +1,7 @@
 package com.example.act22
 
 val StartPage = "Start_Page"
-val SingInPage = "SignIn_Page"
-val SingUpPage = "SignUp_Page"
+val SignInPage = "SignIn_Page"
+val SignUpPage = "SignUp_Page"
 val MainPage = "Main_Page"
+val Portfolio = "Portfolio"

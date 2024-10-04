@@ -6,18 +6,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.navigation.NavController
-import com.example.act22.SingInPage
-import com.example.act22.SingUpPage
+import com.example.act22.SignInPage
+import com.example.act22.SignUpPage
 
 
 @Composable
@@ -28,13 +28,15 @@ fun CreateStart(navController: NavController){
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
     ){
-        Box(
+        Column(
             Modifier
                 .weight(1f)
                 .fillMaxWidth(),
-            Alignment.Center
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ){
             DrawLogo(250.dp)
+            Text("Curve", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.tertiary)
         }
         AddStartColumn(navController)
     }
@@ -51,7 +53,7 @@ fun AddStartColumn(navController: NavController) {
             .background(MaterialTheme.colorScheme.secondary), // Apply background after clipping
         verticalArrangement = Arrangement.Center
     ) {
-        AddButton("Sing in", {navController.navigate(SingInPage)})
-        AddButton("Sing up", {navController.navigate(SingUpPage)})
+        AddButton("Sing in", {navController.navigate(SignInPage)})
+        AddButton("Sing up", {navController.navigate(SignUpPage)})
     }
 }

@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.act22.MainPage
+import com.example.act22.SignUpPage
 
 
 @Composable
@@ -46,18 +47,27 @@ fun CreateSingIn(navController: NavController){
 }
 
 @Composable
-fun AddSignInColumn(navController: NavController){
+fun AddSignInColumn(navController: NavController) {
     Column(
-        Modifier
-            .fillMaxWidth()
-            .padding(20.dp)
-            .clip(RoundedCornerShape(30.dp, 30.dp, 30.dp, 30.dp)) // Apply clipping first
-            .background(MaterialTheme.colorScheme.secondary), // Apply background after clipping
-        verticalArrangement = Arrangement.Center
-    ){
-        AddTextField("Username", false)
+        modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)
+                    .clip(RoundedCornerShape(30.dp))
+                    .background(MaterialTheme.colorScheme.secondary),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(10.dp))
+        AddTextField("Username")
         AddTextField("Password", true)
-        AddButton("Sign in", {navController.navigate(MainPage)})
+        AddButton("Sign in", { navController.navigate(MainPage) })
 
+        LinkToOtherPage("Do not have account yet?",
+                "Sign up.", {navController.navigate(SignUpPage)})
+
+        OrDevider()
+
+        AddGoogleButton("Sign in", {})
     }
 }
+
