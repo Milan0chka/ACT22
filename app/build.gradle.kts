@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -70,4 +71,7 @@ dependencies {
     val nav_version = "2.8.1"
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("androidx.core:core-splashscreen:1.0.0")
+
+    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
+    implementation("com.google.firebase:firebase-analytics")
 }
