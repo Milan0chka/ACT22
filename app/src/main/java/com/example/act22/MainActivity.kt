@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.act22.pages.main.CreateMainPage
+import com.example.act22.pages.main.OpenPortfolio
 import com.example.act22.pages.start.CreateSingIn
 import com.example.act22.pages.start.CreateSingUp
 import com.example.act22.pages.start.CreateStart
@@ -32,6 +33,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(MainPage) {
                         CreateMainPage(navController)
+                    }
+                    composable(Portfolio) {
+                        OpenPortfolio(navController)
                     }
                 })
             }

@@ -53,21 +53,21 @@ val Typography = Typography(
     ),
     labelLarge = TextStyle(
         fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.Thin,
+        fontWeight = FontWeight.Light,
         fontSize = 24.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
     labelMedium = TextStyle(
         fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.Thin,
+        fontWeight = FontWeight.Light,
         fontSize = 18.sp,
         lineHeight = 18.sp,
         letterSpacing = 0.5.sp
     ),
     labelSmall = TextStyle(
         fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.Thin,
+        fontWeight = FontWeight.Light,
         fontSize = 12.sp,
         lineHeight = 12.sp,
         letterSpacing = 0.5.sp

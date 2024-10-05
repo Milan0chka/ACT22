@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.act22.MainPage
+import com.example.act22.Portfolio
 import com.example.act22.SignInPage
 
 @Composable
@@ -60,7 +61,7 @@ fun AddSignUpColumn(navController: NavController){
         AddTextField("Email")
         AddTextField("Username")
         AddTextField("Password", true)
-        AddButton("Sign up", {navController.navigate(MainPage)})
+        AddButton("Sign up", {navController.navigate(Portfolio)})
 
         LinkToOtherPage("Already have an account?", "Sign in.", {navController.navigate(SignInPage)})
 
