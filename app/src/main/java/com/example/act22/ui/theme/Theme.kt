@@ -14,24 +14,30 @@ import androidx.compose.ui.platform.LocalContext
 import com.example.act22.R
 
 // Dark and Light Color Schemes
-private val DarkColorScheme = darkColorScheme(
+private val LightColorScheme = lightColorScheme(
     primary = NewDark,
-    secondary = NewWhite,
-    tertiary = NewPurple,
-    background = NewDark,
-    onSecondary = SupportWhite,
-    onTertiary = SupportBlue,
-    onBackground = LightPurple
+    secondary = NewPurple,
+    tertiary = Lilac,
+    background = NewWhite,
+    surface = LilacGrey,
+    onPrimary = NewWhite,
+    onSecondary = NewWhite,
+    onTertiary = NewDark,
+    onBackground = NewDark,
+    onSurface = PurpleGrey,
 )
 
-private val LightColorScheme = lightColorScheme(
+private val DarkColorScheme = darkColorScheme(
     primary = NewWhite,
-    secondary = NewDark,
-    tertiary = NewPurple,
-    background = NewWhite,
-    onSecondary = SupportWhite,
-    onTertiary = SupportBlue,
-    onBackground = LightPurple
+    secondary = NewPurple,
+    tertiary = Lilac,
+    background = NewDark,
+    surface = PurpleGrey,
+    onPrimary = NewDark,
+    onSecondary = NewWhite,
+    onTertiary = NewDark,
+    onBackground = NewWhite,
+    onSurface = LilacGrey
 )
 
 @Composable
@@ -52,9 +58,9 @@ fun ACT22Theme(
 @Composable
 fun getLogoResource(darkTheme: Boolean = isSystemInDarkTheme()): Int {
     return if (darkTheme) {
-        R.drawable.logo_dark // Your dark theme logo resource
+        R.drawable.logo_dark
     } else {
-        R.drawable.logo_bright // Your light theme logo resource
+        R.drawable.logo_bright
     }
 }
 
