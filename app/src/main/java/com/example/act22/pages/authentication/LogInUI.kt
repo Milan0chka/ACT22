@@ -195,16 +195,14 @@ fun AuthButton(prompt: String, onClick: () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthTextField(
-    string: String,
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
     isPassword: Boolean = false
 ) {
-    var text by remember {
-        mutableStateOf("")
-    }
-
     TextField(
-        value = text,
-        onValueChange = { text = it },
+        value = value,
+        onValueChange = onValueChange,
         modifier = Modifier
             .fillMaxWidth()
             .padding(15.dp, 5.dp),
@@ -220,15 +218,16 @@ fun AuthTextField(
         ),
         singleLine = true,
         placeholder = {
-            Text(string, style = MaterialTheme.typography.titleSmall)
+            Text(label, style = MaterialTheme.typography.titleSmall)
         },
         textStyle = MaterialTheme.typography.titleSmall,
-        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None, // Conditionally apply password transformation
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
         keyboardOptions = KeyboardOptions(
-            keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Text // Conditionally set keyboard type
+            keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Text
         )
     )
 }
+
 
 @Composable
 fun AuthGoogleButton(string: String, onClick: () -> Unit) {

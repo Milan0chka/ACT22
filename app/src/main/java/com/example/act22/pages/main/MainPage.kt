@@ -9,7 +9,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.Row
 
@@ -108,7 +107,7 @@ fun CustomSearchBar() {
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = "meow",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant, // Tint for the icon
+                tint = MaterialTheme.colorScheme.onSurface, // Tint for the icon
                 modifier = Modifier.padding(start = 8.dp).clickable {
                 },
             )
@@ -141,7 +140,7 @@ fun CompactTextField(
                 if (value.isEmpty()) {
                     Text(
                         text = placeholder,
-                        style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
+                        style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurface),
                     )
                 }
                 innerTextField() // Displays the text field input
@@ -292,92 +291,6 @@ fun AllAssets(){
     )
 }
 
-@Composable
-fun AssetCard(asset: Asset, onClickAction: () -> Unit) {
-    val isClicked = remember { mutableStateOf(false) }
-    val cardColor = if (isClicked.value) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.background
-    val cardTextColor = if (isClicked.value) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onBackground
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp)
-            .clickable {
-                isClicked.value = !isClicked.value
-                onClickAction()
-            },
-        colors = CardDefaults.cardColors(
-            containerColor = cardColor,
-            contentColor = cardTextColor
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 10.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(75.dp) // Ensure size is specified
-                    .padding(2.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                AsyncImage(
-                    model = asset.iconUrl,
-                    contentDescription = "${asset.name} logo",
-                    placeholder = painterResource(R.drawable.logo_bright),
-                    error = painterResource(R.drawable.logo_dark), // Fallback in case of error
-                    onLoading = {
-                        println("Loading image for ${asset.name}")
-                    },
-                    onSuccess = {
-                        println("Successfully loaded image for ${asset.name}")
-                    },
-                    onError = {
-                        println("Error loading image for ${asset.name}")
-                    },
-                    contentScale = ContentScale.Fit, // Proper content scale
-                    modifier = Modifier
-                        .size(70.dp)
-                        .clip(RoundedCornerShape(50.dp)) // Circular shape for the image
-                        .background(MaterialTheme.colorScheme.background)
-                        .border(
-                            2.dp,
-                            MaterialTheme.colorScheme.secondary,
-                            shape = RoundedCornerShape(50.dp)
-                        )
-                        .padding(5.dp)
-                )
-            }
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(asset.name, style = MaterialTheme.typography.bodyLarge)
-                Text("Price: $${String.format("%.2f", asset.price)}", style = MaterialTheme.typography.bodyMedium)
-
-                if (asset is TechStock) {
-                    Text("Market Cap: ${formatLargeNumber(asset.marketCap)}", style = MaterialTheme.typography.bodyMedium)
-                    Text("Sector: ${asset.sector}", style = MaterialTheme.typography.bodyMedium)
-                } else if (asset is Crypto) {
-                    Text("Blockchain: ${asset.blockchain}", style = MaterialTheme.typography.bodyMedium)
-                    Text("Market Dominance: ${asset.marketDominance}%", style = MaterialTheme.typography.bodyMedium)
-                }
-            }
-        }
-    }
-}
-
-
-fun formatLargeNumber(number: Double): String {
-    return when {
-        number >= 1_000_000_000 -> String.format("%.1fB", number / 1_000_000_000) // Billions
-        number >= 1_000_000 -> String.format("%.1fM", number / 1_000_000) // Millions
-        else -> String.format("%.2f", number) // Less than 1 million, display normally
-    }
-}
 
 
 

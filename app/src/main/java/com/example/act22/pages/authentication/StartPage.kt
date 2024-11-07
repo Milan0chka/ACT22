@@ -19,7 +19,7 @@ fun LandingPage(
 
 @Composable
 fun StartColumn(navController: NavController){
-    AuthButton ("Sing in", {navController.navigate(SignInPage)})
-    AuthButton("Sing up", {navController.navigate(SignUpPage)})
+    AuthButton ("Sign in", {navController.navigate(SignInPage)})
+    AuthButton("Sign up", {navController.navigate(SignUpPage)})
 }
 

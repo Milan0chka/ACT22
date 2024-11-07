@@ -15,29 +15,33 @@ import com.example.act22.R
 
 // Dark and Light Color Schemes
 private val LightColorScheme = lightColorScheme(
-    primary = NewDark,
+    primary = NewDarkPurple,
     secondary = NewPurple,
     tertiary = Lilac,
     background = NewWhite,
     surface = LilacGrey,
     onPrimary = NewWhite,
     onSecondary = NewWhite,
-    onTertiary = NewDark,
-    onBackground = NewDark,
+    onTertiary = NewDarkPurple,
+    onBackground = NewDarkPurple,
     onSurface = PurpleGrey,
+    secondaryContainer = NewWhite,
+    onSecondaryContainer = NewDarkPurple
 )
 
 private val DarkColorScheme = darkColorScheme(
-    primary = NewWhite,
+    primary = NewDarkPurple,
     secondary = NewPurple,
     tertiary = Lilac,
-    background = NewDark,
-    surface = PurpleGrey,
-    onPrimary = NewDark,
+    background = NewBlack,
+    surface = LilacGrey,
+    onPrimary = NewWhite,
     onSecondary = NewWhite,
-    onTertiary = NewDark,
-    onBackground = NewWhite,
-    onSurface = LilacGrey
+    onTertiary = NewDarkPurple,
+    onBackground = NewDarkPurple,
+    onSurface = PurpleGrey,
+    secondaryContainer = PurpleGrey,
+    onSecondaryContainer = NewWhite
 )
 
 @Composable
@@ -57,10 +61,11 @@ fun ACT22Theme(
 
 @Composable
 fun getLogoResource(darkTheme: Boolean = isSystemInDarkTheme()): Int {
-    return if (darkTheme) {
-        R.drawable.logo_dark
-    } else {
-        R.drawable.logo_bright
-    }
+//    return if (darkTheme) {
+//        R.drawable.logo_dark
+//    } else {
+//        R.drawable.logo_bright
+//    }
+    return  R.drawable.logo_bright
 }
 

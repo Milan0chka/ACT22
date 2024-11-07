@@ -33,10 +33,12 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.act22.pages.authentication.AuthenticationViewModel
 import com.example.act22.pages.main.CreateMainPage
 //import com.example.act22.pages.authentication.PortfolioPage
 import com.example.act22.pages.authentication.LandingPage
@@ -44,8 +46,11 @@ import com.example.act22.pages.authentication.NewPassword
 import com.example.act22.pages.authentication.PassportRecovery
 import com.example.act22.pages.authentication.SignInPage
 import com.example.act22.pages.authentication.SignUpPage
+import com.example.act22.pages.main.PortfolioBuildingPage
+import com.example.act22.pages.main.UserPortfolio
 import com.example.act22.ui.theme.ACT22Theme
 import com.example.act22.ui.theme.getLogoResource
+import okhttp3.Route
 
 data class BottomNavItem(
     val title: String,
@@ -54,43 +59,81 @@ data class BottomNavItem(
 )
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var authViewModel: AuthenticationViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        authViewModel = ViewModelProvider(this).get(AuthenticationViewModel::class.java)
+
+        val startScreen = if (authViewModel.checkIfUserIsLoggedIn()){ MainPage } else { StartPage }
+
         enableEdgeToEdge()
         setContent {
             ACT22Theme (dynamicColor = false){
-                var navController = rememberNavController()
-                NavHost(navController = navController, startDestination = MainPage, builder = {
-                    //No scaffold
-                    composable(StartPage){
-                        LandingPage(navController)
-                    }
-                    composable(SignInPage) {
-                        SignInPage(navController)
-                    }
-                    composable(SignUpPage) {
-                        SignUpPage(navController)
-                    }
-                    composable(Portfolio) {
-                        //PortfolioPage(navController)
-                    }
-                    composable(Recovery) {
-                        PassportRecovery(navController)
-                    }
-                    composable(NewPassword) {
-                        NewPassword(navController)
-                    }
-
-                    composable(MainPage) {
-                        MainScaffold(navController) { innerModifier ->
-                            CreateMainPage(navController, innerModifier)
-                        }
-                    }
-
-                })
+                NavigationSetUp(
+                    startScreen,
+                    authViewModel
+                )
             }
         }
     }
+}
+
+@Composable
+fun NavigationSetUp(
+    startScreen : String,
+    authenticationViewModel: AuthenticationViewModel
+){
+    var navController = rememberNavController()
+    NavHost(navController = navController, startDestination = startScreen, builder = {
+        //No scaffold
+        composable(StartPage){
+            LandingPage(navController)
+        }
+        composable(SignInPage) {
+            SignInPage(
+                navController,
+                authenticationViewModel
+            )
+        }
+        composable(SignUpPage) {
+            SignUpPage(
+                navController,
+                authenticationViewModel
+            )
+        }
+        composable(Recovery) {
+            PassportRecovery(
+                navController,
+                authenticationViewModel
+            )
+        }
+        composable(NewPassword) {
+            NewPassword(
+                navController,
+                authenticationViewModel
+            )
+        }
+        composable(PortfolioBuilder){
+            PortfolioBuildingPage(navController)
+        }
+
+        //with scaffold
+        composable(MainPage) {
+            MainScaffold(navController) { innerModifier ->
+                CreateMainPage(navController, innerModifier)
+            }
+        }
+
+        composable(Portfolio) {
+            MainScaffold(navController) { innerModifier ->
+                UserPortfolio(navController, innerModifier)
+            }
+        }
+
+    })
 }
 
 
@@ -166,7 +209,7 @@ fun CustomBottomBar(navController: NavController) {
         ),
         BottomNavItem(
             title = "User Chart",
-            route = MainPage,
+            route = Portfolio,
             icon = painterResource(R.drawable.donut)
         ),
         BottomNavItem(
