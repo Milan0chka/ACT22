@@ -1,4 +1,4 @@
-package com.example.act22.pages.main
+package com.example.act22.ui.pages.main
 
 import Asset
 import Crypto
@@ -45,21 +45,6 @@ import coil.compose.AsyncImage
 import com.example.act22.R
 import com.example.act22.ui.theme.getLogoResource
 
-@Composable
-fun PageLayout(
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = 45.dp, bottom = 75.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-            content()
-    }
-}
 
 @Composable
 fun AssetCard(asset: Asset, onClickAction: () -> Unit) {
@@ -152,7 +137,7 @@ fun formatLargeNumber(number: Double): String {
 fun BasicButton(string: String, onClickAction: () -> Unit) {
     Box(
         modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center // Centers the button in the middle of the screen
+        contentAlignment = Alignment.Center
     ) {
         Button(
             onClick = onClickAction,

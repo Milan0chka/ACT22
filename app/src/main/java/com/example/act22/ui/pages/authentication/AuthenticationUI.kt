@@ -1,4 +1,4 @@
-package com.example.act22.pages.authentication
+package com.example.act22.ui.pages.authentication
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -46,18 +47,25 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.compose.ui.unit.sp
 import com.example.act22.R
 import com.example.act22.ui.theme.getLogoResource
+import com.radusalagean.infobarcompose.InfoBar
+import com.radusalagean.infobarcompose.InfoBarMessage
+import com.radusalagean.infobarcompose.InfoBarSlideEffect
 
 @Composable
 fun AuthPage(
@@ -108,13 +116,13 @@ fun AuthPage(
 fun DrawLogo(radius: Dp) {
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.secondary
-    val radius2 = radius / 5 * 4
+    val radius2 = radius / 6 * 5
 
     val infiniteTransition = rememberInfiniteTransition()
 
     val offsetY by infiniteTransition.animateFloat(
-        initialValue = -1.5f,
-        targetValue = 1.5f,
+        initialValue = -2f,
+        targetValue = 2f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 1000, easing = LinearEasing),
             repeatMode = RepeatMode.Reverse
@@ -222,9 +230,6 @@ fun AuthTextField(
         },
         textStyle = MaterialTheme.typography.titleSmall,
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Text
-        )
     )
 }
 
@@ -253,7 +258,7 @@ fun AuthGoogleButton(string: String, onClick: () -> Unit) {
             Spacer(modifier = Modifier.width(8.dp)) // Spacing between the logo and text
 
             Image(
-                painter = painterResource(id = R.drawable.google_logo), // Replace with your image resource ID
+                painter = painterResource(id = R.drawable.logo_google), // Replace with your image resource ID
                 contentDescription = "Google Logo",
                 modifier = Modifier.size(35.dp)
             )
@@ -297,4 +302,38 @@ fun OrDevider(){
         HorizontalDivider(modifier = Modifier.weight(1f))
     }
 }
+
+@Composable
+fun ErrorNotification(
+    message: InfoBarMessage?,
+    onDismiss: () -> Unit
+) {
+    if (message != null) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 800.dp),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            InfoBar(
+                offeredMessage = message,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp), // Padding inside the InfoBar
+                elevation = 8.dp,
+                shape = MaterialTheme.shapes.medium,
+                backgroundColor = MaterialTheme.colorScheme.secondary,
+                textColor = MaterialTheme.colorScheme.onSecondary,
+                textFontSize = 16.sp,
+                textFontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                fadeEffect = true,
+                scaleEffect = true,
+                slideEffect = InfoBarSlideEffect.FROM_BOTTOM,
+                enterTransitionMillis = 200,
+                exitTransitionMillis = 150,
+                onDismiss = onDismiss
+            )
+        }
+    }
+}
+
 

@@ -1,10 +1,10 @@
-package com.example.act22.pages.authentication
+package com.example.act22.ui.pages.authentication
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.act22.SignInPage
-import com.example.act22.SignUpPage
+import com.example.act22.activity.Screen
+
 
 @Composable
 fun LandingPage(
@@ -13,13 +13,13 @@ fun LandingPage(
     AuthPage(
         logoHeight = 200.dp,
         isOnBottom = true,
-        content = { StartColumn(navController)}
+        content = { StartColumn(navController) }
     )
 }
 
 @Composable
 fun StartColumn(navController: NavController){
-    AuthButton ("Sign in", {navController.navigate(SignInPage)})
-    AuthButton("Sign up", {navController.navigate(SignUpPage)})
+    AuthButton ("Sign in", {navController.navigate(Screen.SignInPage.route)})
+    AuthButton("Sign up", {navController.navigate(Screen.SignUpPage.route)})
 }
 

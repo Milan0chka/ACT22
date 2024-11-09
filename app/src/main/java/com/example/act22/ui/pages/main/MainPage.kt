@@ -1,4 +1,4 @@
-package com.example.act22.pages.main
+package com.example.act22.ui.pages.main
 
 import Asset
 import Crypto
@@ -71,17 +71,13 @@ import kotlin.math.exp
 
 @Composable
 fun CreateMainPage(
-    navController: NavController,
-    modifier: Modifier
+    navController: NavController
 ){
-    PageLayout(
-        modifier = Modifier,
-        content = {
-            CustomSearchBar()
-            TypeSort()
-            AllAssets()
-        }
-    )
+    MainScaffold(navController) {
+        CustomSearchBar()
+        TypeSort()
+        AllAssets()
+    }
 }
 
 

@@ -53,14 +53,14 @@ val Typography = Typography(
         fontFamily = AlexandriaFontFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 32.sp,
-        lineHeight = 64.sp,
+        lineHeight = 36.sp,
         letterSpacing = 0.sp
     ),
     titleMedium = TextStyle(
         fontFamily = AlexandriaFontFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 28.sp,
-        lineHeight = 40.sp,
+        lineHeight = 32.sp,
         letterSpacing = 0.sp
     ),
     titleSmall = TextStyle(

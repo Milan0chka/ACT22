@@ -1,58 +1,46 @@
-
-# Android Application - README
-
-## Overview
-
-This Android application provides an organized structure and functionality for users. The project is built using Kotlin and follows standard Android development practices, ensuring maintainability and scalability.
-
-### Key Features
-- **Main Activity**: The app launches with `MainActivity`, which is the entry point of the application.
-- **Backup Support**: The app includes backup and restore functionality via `dataExtractionRules` and `fullBackupContent`.
-- **Custom Theme**: The application uses a custom theme defined as `Theme.ACT22`.
-- **Icons**: The app has custom launcher icons defined in the `mipmap` directory (`ic_launcher`, `ic_launcher_round`).
-
 ## Project Structure
 
-- **build.gradle.kts**: Project build configuration using Kotlin script.
-- **proguard-rules.pro**: ProGuard configuration file for code shrinking, obfuscation, and optimization.
-- **src/main**:
-  - **AndroidManifest.xml**: Describes essential information about the app, such as permissions, services, and activities.
-  - **java**: Contains the source code for activities, fragments, and other components.
-  - **res**: Includes all the resources like layouts, images, strings, and themes used in the app.
+This project is organized into several packages, each responsible for a specific aspect of the application’s functionality. Below is an overview of each package and its primary files.
 
-## Key Kotlin Files
+### Packages Overview
 
-1. **MainActivity.kt**: Sets up the main activity of the app, initializing the navigation controller and configuring the app's primary layout.
-2. **Routes.kt**: Defines navigation routes for various screens.
-3. **MainPage.kt**: Contains the composables and logic for rendering the main content page.
-4. **MainPageUI.kt**: Handles the user interface elements and interactions for the main page.
-5. **LogInUI.kt**: Manages the UI for the login screen where users can input credentials to log into the app.
-6. **SignInPage.kt**: Provides functionality for handling sign-in operations.
-7. **SignUpPage.kt**: Contains the logic and UI for the user registration process.
-8. **StartPage.kt**: Serves as the initial page displayed to the user, setting the tone for the app.
-9. **Color.kt**: Defines the custom colors used throughout the app's theme.
-10. **Theme.kt**: Establishes the app's theme, including light and dark modes.
-11. **Type.kt**: Contains typography settings used across the app's user interface.
+- **`activity`**: Contains the main activity that initializes and manages navigation within the app.
+- **`data`**: Holds data models that represent key entities within the application, such as `Asset`, `Portfolio`, and `User`.
+- **`ui`**: Contains UI components, grouped into sub-packages:
+  - **`pages`**: Organized into `authentication` and `main` sub-packages, which contain the various screen Composables used in the app.
+  - **`theme`**: Defines the app’s color scheme, typography, and other theming attributes.
+- **`viewmodel`**: Contains `ViewModel` classes that manage the app’s data and handle business logic. Currently includes `AuthenticationViewModel`.
 
-## Getting Started
+### Detailed Package and File Descriptions
 
-### Prerequisites
-- Android Studio Dolphin or higher.
-- Minimum SDK version: 21 (Android 5.0, Lollipop)
-- Target SDK version: 31 (Android 12)
+#### 1. `activity`
+- **MainActivity.kt**: The entry point of the application. This activity manages navigation throughout the app using Jetpack Compose’s navigation components. It initializes the start screen based on the user's login status and provides a single point for handling app-wide navigation quirks.
 
-### Installation
+#### 2. `data`
+- **Asset.kt**: Defines the `Asset` data model, which represents individual assets in the app (e.g., stocks or other investments).
+- **Portfolio.kt**: Defines the `Portfolio` data model, representing a collection of assets associated with a user.
+- **User.kt**: Represents the `User` data model, holding details specific to a user of the app.
 
-1. Clone the repository or download the project zip file.
-2. Open the project in Android Studio.
-3. Sync the Gradle files by clicking "Sync Now" when prompted.
-4. Run the app on an emulator or connected Android device.
+#### 3. `ui`
+- **pages**
+  - **`authentication`**: Contains Composables related to user authentication, such as login and registration screens.
+    - **LandingPage.kt**: The welcome screen that introduces the app to the user.
+    - **SignInPage.kt**: The login screen for users to enter their credentials and sign in.
+    - **SignUpPage.kt**: The registration screen where new users can create an account.
+    - **PassportRecovery.kt**: Screen for users to initiate the password recovery process.
+    - **NewPassword.kt**: Screen where users can set a new password after recovery.
 
-### Build and Run
+  - **`main`**: Contains the primary screens displayed after user login.
+    - **CreateMainPage.kt**: The main screen of the app where users can view summaries or key information.
+    - **PortfolioBuildingPage.kt**: Screen for building and managing the user’s asset portfolio.
+    - **UserPortfolio.kt**: Displays detailed information about the user's portfolio, including individual assets.
 
-- To build the project, navigate to **Build > Make Project** or press `Ctrl + F9`.
-- To run the project, use the **Run** button or `Shift + F10`.
+- **theme**
+  - **Color.kt**: Defines the color scheme used throughout the app.
+  - **Theme.kt**: Configures the app’s theme, applying colors, typography, and shape styles to the UI.
+  - **Type.kt**: Contains the typography settings used across various screens in the app.
 
-## License
+#### 4. `viewmodel`
+- **AuthenticationViewModel.kt**: Handles the business logic for user authentication, including sign-up, sign-in, and Google Sign-In interactions with Firebase. It centralizes authentication-related operations, keeping the UI and business logic separate.
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+---

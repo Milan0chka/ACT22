@@ -77,6 +77,8 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth.v2310)
+    implementation (libs.play.services.auth.v2020)
 
+    implementation (libs.info.bar.compose)
     implementation(libs.coil.compose)
 }

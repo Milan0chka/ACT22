@@ -1,11 +1,8 @@
-package com.example.act22.pages.main
+package com.example.act22.ui.pages.main
 
-import com.example.act22.pages.authentication.AuthButton
-import com.example.act22.pages.authentication.DrawLogo
+import com.example.act22.ui.pages.authentication.AuthButton
+import com.example.act22.ui.pages.authentication.DrawLogo
 
-import Asset
-import Crypto
-import TechStock
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,23 +11,15 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
-import com.example.act22.MainPage
-import com.example.act22.Portfolio
-import com.example.act22.R
+import com.example.act22.activity.Screen
 import cryptoAssets
 import techStocks
 
@@ -66,7 +55,7 @@ fun LogoBox() {
 
 @Composable
 fun SaveButton(navController: NavController) {
-    AuthButton("Save", { navController.navigate(Portfolio) })
+    AuthButton("Save", { navController.navigate(Screen.Portfolio.route) })
 }
 
 @Composable

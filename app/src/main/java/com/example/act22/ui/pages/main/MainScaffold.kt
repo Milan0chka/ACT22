@@ -1,24 +1,20 @@
-package com.example.act22
+package com.example.act22.ui.pages.main
 
 import android.annotation.SuppressLint
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,24 +29,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.act22.pages.authentication.AuthenticationViewModel
-import com.example.act22.pages.main.CreateMainPage
-//import com.example.act22.pages.authentication.PortfolioPage
-import com.example.act22.pages.authentication.LandingPage
-import com.example.act22.pages.authentication.NewPassword
-import com.example.act22.pages.authentication.PassportRecovery
-import com.example.act22.pages.authentication.SignInPage
-import com.example.act22.pages.authentication.SignUpPage
-import com.example.act22.pages.main.PortfolioBuildingPage
-import com.example.act22.pages.main.UserPortfolio
-import com.example.act22.ui.theme.ACT22Theme
+import com.example.act22.R
+import com.example.act22.activity.Screen
 import com.example.act22.ui.theme.getLogoResource
-import okhttp3.Route
 
 data class BottomNavItem(
     val title: String,
@@ -58,96 +40,25 @@ data class BottomNavItem(
     val icon: Painter
 )
 
-class MainActivity : ComponentActivity() {
-
-    private lateinit var authViewModel: AuthenticationViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        authViewModel = ViewModelProvider(this).get(AuthenticationViewModel::class.java)
-
-        val startScreen = if (authViewModel.checkIfUserIsLoggedIn()){ MainPage } else { StartPage }
-
-        enableEdgeToEdge()
-        setContent {
-            ACT22Theme (dynamicColor = false){
-                NavigationSetUp(
-                    startScreen,
-                    authViewModel
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun NavigationSetUp(
-    startScreen : String,
-    authenticationViewModel: AuthenticationViewModel
-){
-    var navController = rememberNavController()
-    NavHost(navController = navController, startDestination = startScreen, builder = {
-        //No scaffold
-        composable(StartPage){
-            LandingPage(navController)
-        }
-        composable(SignInPage) {
-            SignInPage(
-                navController,
-                authenticationViewModel
-            )
-        }
-        composable(SignUpPage) {
-            SignUpPage(
-                navController,
-                authenticationViewModel
-            )
-        }
-        composable(Recovery) {
-            PassportRecovery(
-                navController,
-                authenticationViewModel
-            )
-        }
-        composable(NewPassword) {
-            NewPassword(
-                navController,
-                authenticationViewModel
-            )
-        }
-        composable(PortfolioBuilder){
-            PortfolioBuildingPage(navController)
-        }
-
-        //with scaffold
-        composable(MainPage) {
-            MainScaffold(navController) { innerModifier ->
-                CreateMainPage(navController, innerModifier)
-            }
-        }
-
-        composable(Portfolio) {
-            MainScaffold(navController) { innerModifier ->
-                UserPortfolio(navController, innerModifier)
-            }
-        }
-
-    })
-}
-
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScaffold(
     navController: NavController,
-    content: @Composable (Modifier) -> Unit
+    content: @Composable () -> Unit
 ) {
     Scaffold(
         topBar = { CustomTopBar(navController) },
         bottomBar = { CustomBottomBar(navController) }
-    ) { innerPadding ->
-        content(Modifier.padding(innerPadding))
+    ) {
+        Column (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 45.dp, bottom = 75.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ){
+            content()
+        }
     }
 }
 
@@ -188,11 +99,16 @@ fun CustomTopBar(navController: NavController) {
             }
 
             Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = "menu",
-                tint = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier.size(35.dp)
-            )
+                painter = painterResource(R.drawable.icon_logout),
+                contentDescription = "Exit",
+                tint = MaterialTheme.colorScheme.surface,
+                modifier = Modifier
+                    .padding(end = 10.dp)
+                    .size(25.dp)
+                    .clickable {
+                    navController.navigate(Screen.StartPage.route)
+                }
+                )
         }
     }
 }
@@ -203,24 +119,24 @@ fun CustomTopBar(navController: NavController) {
 fun CustomBottomBar(navController: NavController) {
     val items = listOf(
         BottomNavItem(
-            title = "Charts",
-            route = MainPage,
-            icon = painterResource(R.drawable.chart)
+            title = "All assets",
+            route = Screen.MainPage.route,
+            icon = painterResource(R.drawable.icon_chart)
         ),
         BottomNavItem(
-            title = "User Chart",
-            route = Portfolio,
-            icon = painterResource(R.drawable.donut)
+            title = "User Portfolio",
+            route = Screen.Portfolio.route,
+            icon = painterResource(R.drawable.icon_donut)
         ),
         BottomNavItem(
             title = "Account",
-            route = MainPage,
-            icon = painterResource(R.drawable.person)
+            route = Screen.MainPage.route, //TODO
+            icon = painterResource(R.drawable.icon_person)
         ),
         BottomNavItem(
             title = "Settings",
-            route = MainPage,
-            icon = painterResource(R.drawable.settings)
+            route = Screen.MainPage.route, //TODO
+            icon = painterResource(R.drawable.icon_settings)
         )
     )
 
@@ -249,7 +165,10 @@ fun CustomBottomBar(navController: NavController) {
                 CustomNavItem(
                     icon = item.icon,
                     label = item.title,
-                    onClick = { navController.navigate(item.route) }
+                    onClick = {
+
+                        navController.navigate(item.route)
+                    }
                 )
             }
         }
@@ -281,5 +200,3 @@ fun CustomNavItem(
         tint = MaterialTheme.colorScheme.onPrimary
     )
 }
-
-
