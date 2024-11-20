@@ -3,10 +3,10 @@ package com.example.act22.ui.pages.main
 import Asset
 import Crypto
 import TechStock
-import androidx.compose.foundation.Image
+import android.annotation.SuppressLint
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,110 +19,96 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.act22.R
-import com.example.act22.ui.theme.getLogoResource
+import kotlin.random.Random
 
 
 @Composable
-fun AssetCard(asset: Asset, onClickAction: () -> Unit) {
-    val isClicked = remember { mutableStateOf(false) }
-    val cardColor = if (isClicked.value) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondaryContainer
-    val cardTextColor = if (isClicked.value) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onSecondaryContainer
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp)
-            .clickable {
-                isClicked.value = !isClicked.value
-                onClickAction()
-            },
-        colors = CardDefaults.cardColors(
-            containerColor = cardColor,
-            contentColor = cardTextColor
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp,)
+fun AssetCardContent(asset: Asset) {
+    Row(
+        modifier = Modifier.padding(horizontal = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 10.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(75.dp)
-                    .padding(2.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                AsyncImage(
-                    model = asset.iconUrl,
-                    contentDescription = "${asset.name} logo",
-                    placeholder = painterResource(R.drawable.logo_bright),
-                    error = painterResource(R.drawable.logo_dark), // Fallback in case of error
-                    onLoading = {
-                        println("Loading image for ${asset.name}")
-                    },
-                    onSuccess = {
-                        println("Successfully loaded image for ${asset.name}")
-                    },
-                    onError = {
-                        println("Error loading image for ${asset.name}")
-                    },
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .size(70.dp)
-                        .clip(RoundedCornerShape(50.dp))
-                        .background(MaterialTheme.colorScheme.onPrimary)
-                        .border(
-                            1.dp,
-                            MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(50.dp)
-                        )
-                        .padding(5.dp)
-                )
-            }
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(asset.name, style = MaterialTheme.typography.bodyLarge)
-                Text("Price: $${String.format("%.2f", asset.price)}", style = MaterialTheme.typography.bodyMedium)
+        AssetImage(asset)
+        AssetDetails(asset)
+    }
+}
 
-                if (asset is TechStock) {
-                    Text("Market Cap: ${formatLargeNumber(asset.marketCap)}", style = MaterialTheme.typography.bodyMedium)
-                    Text("Sector: ${asset.sector}", style = MaterialTheme.typography.bodyMedium)
-                } else if (asset is Crypto) {
-                    Text("Blockchain: ${asset.blockchain}", style = MaterialTheme.typography.bodyMedium)
-                    Text("Market Dominance: ${asset.marketDominance}%", style = MaterialTheme.typography.bodyMedium)
-                }
+@Composable
+fun AssetImage(asset: Asset) {
+    Box(
+        modifier = Modifier
+            .size(75.dp)
+            .padding(2.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        AsyncImage(
+            model = asset.iconUrl,
+            contentDescription = "${asset.name} logo",
+            error = painterResource(R.drawable.logo_dark),
+            onError = { println("Error loading image for ${asset.name}") },
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .size(70.dp)
+                .clip(RoundedCornerShape(50.dp))
+                .background(MaterialTheme.colorScheme.onPrimary)
+                .border(
+                    1.dp,
+                    MaterialTheme.colorScheme.primary,
+                    shape = RoundedCornerShape(50.dp)
+                )
+                .padding(5.dp)
+        )
+    }
+}
+
+@SuppressLint("DefaultLocale")
+@Composable
+fun AssetDetails(asset: Asset) {
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(asset.name, style = MaterialTheme.typography.bodyLarge)
+        Text("Price: $${String.format("%.2f", asset.price)}", style = MaterialTheme.typography.bodyMedium)
+
+        when (asset) {
+            is TechStock -> {
+                Text("Market Cap: ${formatLargeNumber(asset.marketCap)}", style = MaterialTheme.typography.bodyMedium)
+                Text("Sector: ${asset.sector}", style = MaterialTheme.typography.bodyMedium)
             }
+            is Crypto -> {
+                Text("Blockchain: ${asset.blockchain}", style = MaterialTheme.typography.bodyMedium)
+                Text("Market Dominance: ${asset.marketDominance}%", style = MaterialTheme.typography.bodyMedium)
+            }
+
+            else -> {}
         }
     }
 }
+
 
 
 fun formatLargeNumber(number: Double): String {
@@ -134,9 +120,13 @@ fun formatLargeNumber(number: Double): String {
 }
 
 @Composable
-fun BasicButton(string: String, onClickAction: () -> Unit) {
+fun BasicButton(
+    string: String,
+    onClickAction: () -> Unit,
+    color: Color = MaterialTheme.colorScheme.tertiary,
+    textColor: Color = MaterialTheme.colorScheme.onTertiary
+) {
     Box(
-        modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
         Button(
@@ -144,17 +134,148 @@ fun BasicButton(string: String, onClickAction: () -> Unit) {
             modifier = Modifier
                 .padding(20.dp)
                 .height(50.dp)
-                .clip(RoundedCornerShape(24.dp)) // Makes the button rounded
-                .background(MaterialTheme.colorScheme.tertiary),
-            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary) // Ensures background color is applied correctly
+                .clip(RoundedCornerShape(24.dp)),
+            colors = ButtonDefaults.buttonColors(color)
         ) {
             Text(
                 text = string,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onTertiary
+                style = MaterialTheme.typography.bodyMedium,
+                color = textColor
             )
         }
     }
 }
+
+@Composable
+fun BigButton(prompt: String, onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .height(90.dp)
+            .fillMaxWidth()
+            .padding(20.dp)
+            .clip(RoundedCornerShape(30.dp)),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary
+        ),
+        shape = RoundedCornerShape(30.dp),
+        elevation = ButtonDefaults.buttonElevation(0.dp)
+    ) {
+        Text(
+            text = prompt,
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSecondary
+        )
+    }
+}
+
+@Composable
+fun EmptyPage(
+    text: String,
+    buttonText: String,
+    onClick: () -> Unit
+){
+    Column (
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ){
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        BasicButton(buttonText, onClick)
+    }
+}
+
+@Composable
+fun StockChartPlaceholder(
+    height: Dp = 300.dp
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(height)
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(vertical = 10.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        StockChart()
+    }
+}
+@Composable
+fun StockChart(
+    lineColor: Color = MaterialTheme.colorScheme.tertiary,
+    pointColor: Color = MaterialTheme.colorScheme.secondary,
+    pointRadius: Float = 6f,
+    numberOfPoints: Int = 25
+) {
+    val stockPrices = remember { generateRandomStockPrices(numberOfPoints) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface),
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val canvasWidth = size.width
+            val canvasHeight = size.height
+
+            if (stockPrices.isNotEmpty()) {
+                // Calculate the spacing between points
+                val spacing = canvasWidth / (stockPrices.size - 1)
+
+                // Find the min and max values to scale the graph
+                val minPrice = stockPrices.minOrNull() ?: 0f
+                val maxPrice = stockPrices.maxOrNull() ?: 0f
+                val priceRange = maxPrice - minPrice
+
+                // Create a path for the line
+                val path = Path().apply {
+                    stockPrices.forEachIndexed { index, price ->
+                        val x = index * spacing
+                        val y = canvasHeight - ((price - minPrice) / priceRange * canvasHeight)
+                        if (index == 0) moveTo(x, y) else lineTo(x, y)
+                    }
+                }
+
+                // Draw the line
+                drawPath(
+                    path = path,
+                    color = lineColor,
+                    style = Stroke(width = 4f)
+                )
+
+                // Draw points
+                stockPrices.forEachIndexed { index, price ->
+                    val x = index * spacing
+                    val y = canvasHeight - ((price - minPrice) / priceRange * canvasHeight)
+                    drawCircle(
+                        color = pointColor,
+                        radius = pointRadius,
+                        center = Offset(x, y)
+                    )
+                }
+            }
+        }
+
+        // Placeholder text if no data
+        if (stockPrices.isEmpty()) {
+            Text(
+                text = "No data available",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
+
+fun generateRandomStockPrices(size: Int): List<Float> {
+    return List(size) { Random.nextFloat() * 1000f }
+}
+
 
 

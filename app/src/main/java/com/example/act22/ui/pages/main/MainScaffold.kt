@@ -30,9 +30,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.act22.R
 import com.example.act22.activity.Screen
 import com.example.act22.ui.theme.getLogoResource
+import com.example.act22.viewmodel.AuthenticationViewModel
 
 data class BottomNavItem(
     val title: String,
@@ -53,7 +55,7 @@ fun MainScaffold(
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 45.dp, bottom = 75.dp),
+                .padding(top = 42.dp, bottom = 75.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ){
@@ -69,18 +71,18 @@ fun CustomTopBar(navController: NavController) {
     ) {
         Row(
             modifier = Modifier
-                .height(70.dp)
+                .height(74.dp)
                 .fillMaxWidth()
                 .clip(
                     RoundedCornerShape(
                         topStart = 0.dp,
                         topEnd = 0.dp,
-                        bottomEnd = 30.dp,
-                        bottomStart = 30.dp
+                        bottomEnd = 25.dp,
+                        bottomStart = 25.dp
                     )
                 )
                 .background(MaterialTheme.colorScheme.primary)
-                .padding(horizontal = 10.dp, vertical = 6.dp),
+                .padding(top = 24.dp, start = 8.dp, end = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -101,13 +103,10 @@ fun CustomTopBar(navController: NavController) {
             Icon(
                 painter = painterResource(R.drawable.icon_logout),
                 contentDescription = "Exit",
-                tint = MaterialTheme.colorScheme.surface,
+                tint = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = Modifier
-                    .padding(end = 10.dp)
                     .size(25.dp)
-                    .clickable {
-                    navController.navigate(Screen.StartPage.route)
-                }
+                    .clickable { navController.navigate(Screen.StartPage.route) }
                 )
         }
     }
@@ -130,15 +129,17 @@ fun CustomBottomBar(navController: NavController) {
         ),
         BottomNavItem(
             title = "Account",
-            route = Screen.MainPage.route, //TODO
+            route = Screen.Profile.route,
             icon = painterResource(R.drawable.icon_person)
         ),
         BottomNavItem(
             title = "Settings",
-            route = Screen.MainPage.route, //TODO
+            route = Screen.Settings.route,
             icon = painterResource(R.drawable.icon_settings)
         )
     )
+
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route ?: Screen.MainPage.route
 
     Box(
         contentAlignment = Alignment.BottomCenter
@@ -149,8 +150,8 @@ fun CustomBottomBar(navController: NavController) {
                 .fillMaxWidth()
                 .clip(
                     RoundedCornerShape(
-                        topStart = 30.dp,
-                        topEnd = 30.dp,
+                        topStart = 25.dp,
+                        topEnd = 25.dp,
                         bottomEnd = 0.dp,
                         bottomStart = 0.dp
                     )
@@ -160,26 +161,23 @@ fun CustomBottomBar(navController: NavController) {
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Creates clickable navigation items
             items.forEach { item ->
                 CustomNavItem(
                     icon = item.icon,
                     label = item.title,
-                    onClick = {
-
-                        navController.navigate(item.route)
-                    }
+                    isSelected = currentRoute == item.route,
+                    onClick = { navController.navigate(item.route) }
                 )
             }
         }
     }
 }
 
-// Defines each navigation item with an icon and label
 @Composable
 fun CustomNavItem(
     icon: Painter,
     label: String,
+    isSelected: Boolean,
     onClick: () -> Unit
 ) {
     Icon(
@@ -190,13 +188,14 @@ fun CustomNavItem(
                 onClick = onClick,
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    radius = 50.dp,
                     bounded = true
                 )
             )
             .padding(8.dp),
         painter = icon,
         contentDescription = label,
-        tint = MaterialTheme.colorScheme.onPrimary
+        tint =  if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onPrimary
     )
 }

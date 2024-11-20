@@ -24,31 +24,17 @@ fun RegistrationSuccess(
     navController: NavController,
     authenticationViewModel: AuthenticationViewModel
 ){
-    var message: InfoBarMessage? by remember { mutableStateOf(null) }
-
     AuthPage(
         logoHeight = 100.dp,
         content = {
-            RegistrationSuccessColumn(
-                navController,
-                authenticationViewModel
-            ){ msg ->
-                message = InfoBarMessage(text = msg)
-            }
+            RegistrationSuccessColumn(navController)
         }
-    )
-
-    ErrorNotification(
-        message = message,
-        onDismiss = { message = null }
     )
 }
 
 @Composable
 fun RegistrationSuccessColumn(
-    navController: NavController,
-    authenticationViewModel: AuthenticationViewModel,
-    onShowMessage: (String) -> Unit
+    navController: NavController
 ){
     Spacer(modifier = Modifier.height(50.dp))
     Text(
@@ -61,13 +47,13 @@ fun RegistrationSuccessColumn(
     Text(
         text = "Your registration was successful, but we need you to confirm your email first!",
         style = MaterialTheme.typography.titleSmall,
-        color = MaterialTheme.colorScheme.tertiary,
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
         textAlign = TextAlign.Center,
         modifier = Modifier.padding(10.dp)
     )
-    BasicButton(
-        string = "Continue",
-        onClickAction = {
+    AuthButton(
+        prompt = "Continue",
+        onClick = {
             navController.navigate(Screen.SignInPage.route)
         }
     )

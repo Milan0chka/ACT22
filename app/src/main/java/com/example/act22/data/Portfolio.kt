@@ -5,8 +5,8 @@ import TechStock
 
 data class Portfolio(
     val userID: Int,
-    val techStocks: List<TechStock>,
-    val cryptos: List<Crypto>
+    val techStocks: MutableList<TechStock>,
+    val cryptos: MutableList<Crypto>
 ) {
     init {
         require(techStocks.size <= 10) { "techStocks can have at most 10 items" }

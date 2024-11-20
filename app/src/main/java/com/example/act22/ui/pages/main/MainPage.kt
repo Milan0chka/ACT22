@@ -1,11 +1,7 @@
 package com.example.act22.ui.pages.main
 
 import Asset
-import Crypto
-import TechStock
-import android.text.style.AlignmentSpan
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,56 +13,42 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
-import androidx.credentials.provider.Action
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import com.example.act22.R
+import com.example.act22.activity.Screen
 import cryptoAssets
 import techStocks
-import kotlin.math.exp
 
 
 @Composable
@@ -76,17 +58,19 @@ fun CreateMainPage(
     MainScaffold(navController) {
         CustomSearchBar()
         TypeSort()
-        AllAssets()
+        AllAssets(navController)
     }
 }
 
 
 @Composable
-fun CustomSearchBar() {
+fun CustomSearchBar(onSearch: (String) -> Unit = {}) {
+    var searchQuery by remember { mutableStateOf("") }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.onSurface)
+            .background(MaterialTheme.colorScheme.primaryContainer)
             .height(95.dp)
             .padding(horizontal = 20.dp)
             .padding(10.dp),
@@ -102,13 +86,19 @@ fun CustomSearchBar() {
         ) {
             Icon(
                 imageVector = Icons.Default.Search,
-                contentDescription = "meow",
-                tint = MaterialTheme.colorScheme.onSurface, // Tint for the icon
-                modifier = Modifier.padding(start = 8.dp).clickable {
-                },
+                contentDescription = "Search icon",
+                tint = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .clickable { onSearch(searchQuery) }
             )
 
-            CompactTextField("", {}, "meow")
+            CompactTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                placeholder = "Search...",
+                onDone = { onSearch(searchQuery) }
+            )
         }
     }
 }
@@ -117,31 +107,44 @@ fun CustomSearchBar() {
 fun CompactTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    placeholder: String
+    placeholder: String,
+    onDone: () -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(40.dp) // Compact height
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp)) // Custom background and shape
-            .padding(horizontal = 8.dp), // Padding around the text field content
+            .height(40.dp)
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
+            .padding(horizontal = 8.dp),
         contentAlignment = Alignment.CenterStart
     ) {
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
-            textStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurface),
+            textStyle = MaterialTheme.typography.bodyMedium.copy(
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            ),
             singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { onDone() }
+            ),
             decorationBox = { innerTextField ->
                 if (value.isEmpty()) {
                     Text(
                         text = placeholder,
-                        style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurface),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     )
                 }
-                innerTextField() // Displays the text field input
+                innerTextField()
             },
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -150,52 +153,47 @@ fun CompactTextField(
 
 @Composable
 fun TypeSort() {
-    // State to manage dropdown visibility
     val (expanded, setExpanded) = remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(45.dp)
-            .background(MaterialTheme.colorScheme.onSurface)
-            .padding(horizontal = 20.dp)
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .padding(horizontal = 24.dp)
             .padding(bottom = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        // First Button "Stocks"
+
         SortButton(
             title = "Stocks",
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(0.45f),
-            onClick = {}
+            onClick = {} //todo
         )
 
-        // Second Button "Crypto"
         SortButton(
             title = "Crypto",
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(0.45f),
-            onClick = {}
+            onClick = {} //todo
         )
 
-        // Icon with Dropdown
         Box(
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(0.1f)
                 .padding(horizontal = 5.dp)
-                .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(10.dp))
-                .clickable {
-                    setExpanded(true) // Open the dropdown when clicked
-                }
+                .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(10.dp))
+                .clickable { setExpanded(true) }
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowDropDown,
                 contentDescription = "Sort Options",
-                tint = MaterialTheme.colorScheme.surface,
+                tint = MaterialTheme.colorScheme.onSecondary,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(5.dp)
@@ -212,24 +210,17 @@ fun CustomDropDownMenu(
     setExpanded: (Boolean) -> Unit
 ) {
     DropdownMenu(
-        modifier = Modifier.background(MaterialTheme.colorScheme.primary),
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .clip(RoundedCornerShape(10.dp)),
         offset = DpOffset(0.dp, 5.dp),
         properties = PopupProperties(focusable = true),
         expanded = expanded,
         onDismissRequest = { setExpanded(false) }
     ) {
-        CustomDropDownItem("Cheaper first") {
-            // Sort cheaper first logic here
-            setExpanded(false)
-        }
-        CustomDropDownItem("Expensive first") {
-            // Sort expensive first logic here
-            setExpanded(false)
-        }
-        CustomDropDownItem("New first") {
-            // Sort new first logic here
-            setExpanded(false)
-        }
+        CustomDropDownItem("Cheaper first") { setExpanded(false) }
+        CustomDropDownItem("Expensive first") { setExpanded(false) }
+        CustomDropDownItem("New first") { setExpanded(false) }
     }
 }
 
@@ -244,7 +235,7 @@ fun CustomDropDownItem(
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.surface
+                color = MaterialTheme.colorScheme.onSecondaryContainer
             )
         },
         onClick = onClick
@@ -261,30 +252,52 @@ fun SortButton(
         modifier = modifier.padding(horizontal = 5.dp),
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary
         ),
-        shape = RoundedCornerShape(7.dp)
+        shape = RoundedCornerShape(10.dp)
     ) {
         Text(title, style = MaterialTheme.typography.bodySmall)
     }
 }
 
 @Composable
-fun AllAssets(){
+fun AllAssets(
+    navController: NavController
+){
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
         content = {
             items(techStocks) { stock ->
-               AssetCard(stock, {})
+               MainAssetCard(navController,stock)
             }
             items(cryptoAssets) { crypto ->
-                AssetCard(crypto, {})
+                MainAssetCard(navController, crypto)
             }
         }
     )
+}
+
+@Composable
+fun MainAssetCard(
+    navController: NavController,
+    asset: Asset
+){
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+            .clickable { navController.navigate(Screen.AssetDetails.createRoute(asset.name)) },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.5.dp)
+    ) {
+        AssetCardContent(asset)
+    }
 }
 
 

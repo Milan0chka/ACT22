@@ -93,7 +93,7 @@ fun AuthPage(
         Text(
             text = "Curve",
             style = if (isOnBottom == true) MaterialTheme.typography.displayLarge else MaterialTheme.typography.displayMedium,
-            color = MaterialTheme.colorScheme.secondary
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         if (isOnBottom == true) Spacer(Modifier.weight(0.5f)) else Spacer(Modifier.height(20.dp))
@@ -102,8 +102,8 @@ fun AuthPage(
             Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
-                .clip(RoundedCornerShape(30.dp, 30.dp, 30.dp, 30.dp))
-                .background(MaterialTheme.colorScheme.onBackground),
+                .clip(RoundedCornerShape(30.dp))
+                .background(MaterialTheme.colorScheme.primaryContainer),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -132,7 +132,7 @@ fun DrawLogo(radius: Dp) {
     var isHovered by remember { mutableStateOf(false) }
 
     val scale by animateFloatAsState(
-        targetValue = if (isHovered) 1.2f else 1.0f, // Increase size on hover
+        targetValue = if (isHovered) 1.2f else 1.0f,
         animationSpec = tween(durationMillis = 500)
     )
 
@@ -160,13 +160,13 @@ fun DrawLogo(radius: Dp) {
             modifier = Modifier
                 .size(radius2)
                 .scale(scale)
-                .offset(y = offsetY.dp) // Apply vertical offset animation
+                .offset(y = offsetY.dp)
                 .pointerInput(Unit) {
                     detectTapGestures(
                         onPress = {
-                            isHovered = true // On press, scale up
+                            isHovered = true
                             tryAwaitRelease()
-                            isHovered = false // Scale down after release
+                            isHovered = false
                         }
                     )
                 },
@@ -183,14 +183,9 @@ fun AuthButton(prompt: String, onClick: () -> Unit) {
         modifier = Modifier
             .height(100.dp)
             .fillMaxWidth()
-            .padding(20.dp)
-            .clip(RoundedCornerShape(30.dp)),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            contentColor = MaterialTheme.colorScheme.onSecondary
-        ),
-        shape = RoundedCornerShape(30.dp),
-        elevation = ButtonDefaults.buttonElevation(0.dp)
+            .padding(20.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+        shape = RoundedCornerShape(25.dp)
     ) {
         Text(
             text = prompt,
@@ -215,19 +210,17 @@ fun AuthTextField(
             .fillMaxWidth()
             .padding(15.dp, 5.dp),
         colors = TextFieldDefaults.textFieldColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            cursorColor = MaterialTheme.colorScheme.onPrimary,
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            cursorColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.onSecondaryContainer,
             focusedTextColor = MaterialTheme.colorScheme.onPrimary,
-            unfocusedTextColor = MaterialTheme.colorScheme.surface,
-            unfocusedPlaceholderColor = MaterialTheme.colorScheme.surface,
-            unfocusedIndicatorColor = MaterialTheme.colorScheme.surface,
             focusedPlaceholderColor = MaterialTheme.colorScheme.onPrimary,
             focusedIndicatorColor = MaterialTheme.colorScheme.onPrimary
         ),
         singleLine = true,
-        placeholder = {
-            Text(label, style = MaterialTheme.typography.titleSmall)
-        },
+        placeholder = { Text(label, style = MaterialTheme.typography.titleSmall) },
         textStyle = MaterialTheme.typography.titleSmall,
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
     )
@@ -242,23 +235,24 @@ fun AuthGoogleButton(string: String, onClick: () -> Unit) {
             .height(100.dp)
             .fillMaxWidth()
             .padding(20.dp)
-            .clip(RoundedCornerShape(30.dp))
-            .border(2.dp, color = MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(30.dp)),
+            .border(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.secondary,
+                shape = RoundedCornerShape(25.dp)
+            ),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary
-        ),
-        shape = RoundedCornerShape(30.dp),
-        elevation = ButtonDefaults.buttonElevation(0.dp)
+        )
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
 
             Text("$string with", style = MaterialTheme.typography.titleSmall)
 
-            Spacer(modifier = Modifier.width(8.dp)) // Spacing between the logo and text
+            Spacer(modifier = Modifier.width(8.dp))
 
             Image(
-                painter = painterResource(id = R.drawable.logo_google), // Replace with your image resource ID
+                painter = painterResource(id = R.drawable.logo_google),
                 contentDescription = "Google Logo",
                 modifier = Modifier.size(35.dp)
             )
@@ -272,7 +266,7 @@ fun LinkToOtherPage(prompt:String, prompt2: String, onClick: () -> Unit){
         Text(
             text = "$prompt ",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.surface,
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
         )
         Text(
             text = prompt2,
@@ -288,9 +282,7 @@ fun OrDevider(){
     Spacer(modifier = Modifier.height(20.dp))
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-
-            .width(300.dp)
+        modifier = Modifier.width(300.dp)
     ) {
         HorizontalDivider(modifier = Modifier.weight(1f))
         Text(
@@ -306,19 +298,20 @@ fun OrDevider(){
 @Composable
 fun ErrorNotification(
     message: InfoBarMessage?,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    padding: Dp = 800.dp
 ) {
     if (message != null) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 800.dp),
+                .padding(top = padding),
             contentAlignment = Alignment.BottomCenter
         ) {
             InfoBar(
                 offeredMessage = message,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp), // Padding inside the InfoBar
-                elevation = 8.dp,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                elevation = 4.dp,
                 shape = MaterialTheme.shapes.medium,
                 backgroundColor = MaterialTheme.colorScheme.secondary,
                 textColor = MaterialTheme.colorScheme.onSecondary,

@@ -10,33 +10,51 @@ import com.example.act22.R
 
 // Dark and Light Color Schemes
 private val LightColorScheme = lightColorScheme(
-    primary = NewDarkPurple,
-    secondary = NewPurple,
-    tertiary = Lilac,
-    background = NewWhite,
-    surface = LilacGrey,
-    onPrimary = NewWhite,
-    onSecondary = NewWhite,
-    onTertiary = NewDarkPurple,
-    onBackground = NewDarkPurple,
-    onSurface = PurpleGrey,
-    secondaryContainer = NewWhite,
-    onSecondaryContainer = NewDarkPurple
+    //backgrounds
+    primary = DarkPurple60,
+    primaryContainer = DarkPurple40,
+    secondary = Purple40,
+    secondaryContainer = Purple60,
+    tertiary = Lilac40,
+    tertiaryContainer = Lilac20,
+    background = White,
+    surface = Grey20,
+    surfaceVariant = Grey40,
+
+    //texts
+    onPrimary = White,
+    onPrimaryContainer = DarkPurple20,
+    onSecondary = White,
+    onSecondaryContainer = Grey40,
+    onTertiary = White,
+    onTertiaryContainer = DarkPurple60,
+    onBackground = DarkPurple60,
+    onSurface = Purple40,
+    onSurfaceVariant = Lilac40
 )
 
 private val DarkColorScheme = darkColorScheme(
-    primary = NewDarkPurple,
-    secondary = NewPurple,
-    tertiary = Lilac,
-    background = NewBlack,
-    surface = LilacGrey,
-    onPrimary = NewWhite,
-    onSecondary = NewWhite,
-    onTertiary = NewDarkPurple,
-    onBackground = NewDarkPurple,
-    onSurface = PurpleGrey,
-    secondaryContainer = PurpleGrey,
-    onSecondaryContainer = NewWhite
+    //backgrounds
+    primary = DarkPurple60,
+    primaryContainer = DarkPurple40,
+    secondary = Purple40,
+    secondaryContainer = Purple60,
+    tertiary = Lilac40,
+    tertiaryContainer = Lilac20,
+    background = Black,
+    surface = Grey80,
+    surfaceVariant = Grey60,
+
+    //texts
+    onPrimary = White,
+    onPrimaryContainer = DarkPurple20,
+    onSecondary = White,
+    onSecondaryContainer = Grey40,
+    onTertiary = White,
+    onTertiaryContainer = DarkPurple60,
+    onBackground = White,
+    onSurface = Purple40,
+    onSurfaceVariant = Lilac40
 )
 
 @Composable

@@ -22,7 +22,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class AuthenticationViewModel : ViewModel() {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private fun validateCredentials(email: String, password: String): String? {
         if (email.isEmpty() || password.isEmpty()) {
@@ -124,14 +123,14 @@ class AuthenticationViewModel : ViewModel() {
             }
     }
 
-    fun signOut(){
-        Firebase.auth.signOut()
-        Log.d("SignOut", "Successfully signed out")
+    fun signOut(onResult: () -> Unit) {
+        auth.signOut()
+        onResult()
     }
 
 
     fun checkIfUserIsLoggedIn(): Boolean {
-        return false
+        return auth.currentUser != null
     }
 
     fun isEmailConfirmed(onResult: (Boolean) -> Unit) {

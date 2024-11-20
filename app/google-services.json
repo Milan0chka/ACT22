@@ -1,20 +1,20 @@
 {
   "project_info": {
-    "project_number": "531061573814",
-    "project_id": "act-project-a",
-    "storage_bucket": "act-project-a.appspot.com"
+    "project_number": "234635940642",
+    "project_id": "act-group22",
+    "storage_bucket": "act-group22.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:531061573814:android:535ac9f08273439b9c7e17",
+        "mobilesdk_app_id": "1:234635940642:android:6a9df1d84b8b176cab4b7b",
         "android_client_info": {
           "package_name": "com.example.act22"
         }
       },
       "oauth_client": [
         {
-          "client_id": "531061573814-405t650j39d0l50detk39gjgjah4l7b5.apps.googleusercontent.com",
+          "client_id": "234635940642-q7m6kl62qpnpagnlskfgmcj1sbkkv08f.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.act22",
@@ -22,20 +22,20 @@
           }
         },
         {
-          "client_id": "531061573814-a08qhkg8dooggk9i57f9fimpe3kbb4lp.apps.googleusercontent.com",
+          "client_id": "234635940642-bsh21bhlgbnrugokajmhu6ek0553dkhq.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBQ2Qe0pV3QUGlMHC5nOb2MMCDqyskMDWU"
+          "current_key": "AIzaSyB4iWIRK4HYGgL0Y5lPECKF5aWEg7wSyak"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "531061573814-a08qhkg8dooggk9i57f9fimpe3kbb4lp.apps.googleusercontent.com",
+              "client_id": "234635940642-bsh21bhlgbnrugokajmhu6ek0553dkhq.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
