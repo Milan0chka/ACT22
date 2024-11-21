@@ -295,38 +295,4 @@ fun OrDevider(){
     }
 }
 
-@Composable
-fun ErrorNotification(
-    message: InfoBarMessage?,
-    onDismiss: () -> Unit,
-    padding: Dp = 800.dp
-) {
-    if (message != null) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = padding),
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            InfoBar(
-                offeredMessage = message,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                elevation = 4.dp,
-                shape = MaterialTheme.shapes.medium,
-                backgroundColor = MaterialTheme.colorScheme.secondary,
-                textColor = MaterialTheme.colorScheme.onSecondary,
-                textFontSize = 16.sp,
-                textFontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                fadeEffect = true,
-                scaleEffect = true,
-                slideEffect = InfoBarSlideEffect.FROM_BOTTOM,
-                enterTransitionMillis = 200,
-                exitTransitionMillis = 150,
-                onDismiss = onDismiss
-            )
-        }
-    }
-}
-
 

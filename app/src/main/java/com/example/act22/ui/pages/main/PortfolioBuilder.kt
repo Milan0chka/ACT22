@@ -1,6 +1,7 @@
 package com.example.act22.ui.pages.main
 
 import Asset
+import android.widget.Toast
 import com.example.act22.ui.pages.authentication.DrawLogo
 
 import androidx.compose.foundation.*
@@ -19,11 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.act22.activity.Screen
-import com.example.act22.ui.pages.authentication.ErrorNotification
 import com.example.act22.viewmodel.PortfolioViewModel
 import com.radusalagean.infobarcompose.InfoBarMessage
 import cryptoAssets
@@ -161,7 +162,7 @@ fun ToggleAssetCard(
     val cardColor = if (isClicked.value) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.surface
     val cardTextColor = if (isClicked.value) MaterialTheme.colorScheme.onTertiaryContainer else MaterialTheme.colorScheme.onSurface
 
-    var message: InfoBarMessage? by remember { mutableStateOf(null) }
+    val context = LocalContext.current
 
     Card(
         modifier = Modifier
@@ -169,7 +170,11 @@ fun ToggleAssetCard(
             .padding(10.dp)
             .clickable {
                 portfolioViewModel.toggleAsset(asset) { msg ->
-                    message = InfoBarMessage(text = msg)
+                    Toast.makeText(
+                        context,
+                        msg ?: "An unknown error occurred.",
+                        Toast.LENGTH_LONG
+                    ).show()
                     isClicked.value = !isClicked.value
                 }
             },
@@ -181,11 +186,4 @@ fun ToggleAssetCard(
     ) {
         AssetCardContent(asset)
     }
-
-    // Display error message if any
-    ErrorNotification(
-        message = message,
-        onDismiss = { message = null },
-        padding = 0.dp
-    )
 }

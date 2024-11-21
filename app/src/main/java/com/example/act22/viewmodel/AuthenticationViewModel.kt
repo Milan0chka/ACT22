@@ -39,7 +39,7 @@ class AuthenticationViewModel : ViewModel() {
             exception is FirebaseAuthInvalidCredentialsException -> "Incorrect password. Please try again."
             exception is FirebaseAuthUserCollisionException -> "This email is already registered."
             exception?.message?.contains("PASSWORD_DOES_NOT_MEET_REQUIREMENTS") == true ->
-                "Password does not meet requirements: least 6 characters long, contains upper- and lowercase letter and numbers."
+                "Password needs to be 8 characters long, include upper- and lowercase letters."
             else -> exception?.message ?: "An unknown error occurred. Please try again."
         }
     }

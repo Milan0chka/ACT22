@@ -1,5 +1,6 @@
 package com.example.act22.ui.pages.authentication
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -8,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.act22.activity.Screen
@@ -21,36 +23,27 @@ fun SignUpPage(
     navController: NavController,
     authenticationViewModel: AuthenticationViewModel
 ) {
-    var message: InfoBarMessage? by remember { mutableStateOf(null) }
-
     AuthPage(
         logoHeight = 100.dp,
         content = {
             SignUpColumn(
                 navController,
                 authenticationViewModel
-            ) { msg ->
-                message = InfoBarMessage(text = msg)
-            }
+            )
         }
-    )
-
-    ErrorNotification(
-        message = message,
-        onDismiss = { message = null }
     )
 }
 
 @Composable
 fun SignUpColumn(
     navController: NavController,
-    authenticationViewModel: AuthenticationViewModel,
-    onShowMessage: (String) -> Unit
+    authenticationViewModel: AuthenticationViewModel
 ) {
     var fullName by remember { mutableStateOf("") }
     var companyName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     Spacer(modifier = Modifier.height(10.dp))
 
@@ -64,7 +57,11 @@ fun SignUpColumn(
             if (success) {
                 navController.navigate(Screen.RegistrationSuccess.route)
             } else {
-                onShowMessage(errorMessages ?: "An unknown error occurred.")
+                Toast.makeText(
+                    context,
+                    errorMessages ?: "An unknown error occurred.",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }

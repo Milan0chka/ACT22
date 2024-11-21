@@ -21,8 +21,12 @@ import com.example.act22.ui.pages.authentication.RegistrationSuccess
 import com.example.act22.ui.pages.authentication.SignInPage
 import com.example.act22.ui.pages.authentication.SignUpPage
 import com.example.act22.ui.pages.main.AssetDetails
+import com.example.act22.ui.pages.main.FeedbackPage
+import com.example.act22.ui.pages.main.Options
 import com.example.act22.ui.pages.main.PortfolioBuildingPage
-import com.example.act22.ui.pages.main.Settings
+import com.example.act22.ui.pages.main.SettingsPage
+import com.example.act22.ui.pages.main.SupportEmail
+import com.example.act22.ui.pages.main.SupportPage
 import com.example.act22.ui.pages.main.UserPortfolio
 import com.example.act22.ui.pages.main.UserProfile
 import com.example.act22.ui.theme.ACT22Theme
@@ -39,6 +43,10 @@ sealed class Screen(val route: String) {
     object RegistrationSuccess : Screen("RegistrationSuccess")
     object Profile : Screen("Profile")
     object Settings : Screen("Settings")
+    object Support : Screen("Support")
+    object SupportEmail : Screen("Support_Email")
+    object Feedback : Screen("Feedback")
+    object Options : Screen("Options")
     object AssetDetails : Screen("details/{name}") {
         fun createRoute(name: String): String {
             return "details/$name"
@@ -127,8 +135,20 @@ fun NavigationSetUp(
         composable(Screen.Profile.route) {
             UserProfile(navController)
         }
+        composable(Screen.Options.route) {
+            Options(navController)
+        }
+        composable(Screen.Support.route) {
+            SupportPage(navController)
+        }
+        composable(Screen.SupportEmail.route) {
+            SupportEmail(navController)
+        }
+        composable(Screen.Feedback.route) {
+            FeedbackPage(navController)
+        }
         composable(Screen.Settings.route) {
-            Settings(navController)
+            SettingsPage(navController)
         }
 
         composable(

@@ -133,8 +133,8 @@ fun CustomBottomBar(navController: NavController) {
             icon = painterResource(R.drawable.icon_person)
         ),
         BottomNavItem(
-            title = "Settings",
-            route = Screen.Settings.route,
+            title = "Options",
+            route = Screen.Options.route,
             icon = painterResource(R.drawable.icon_settings)
         )
     )
