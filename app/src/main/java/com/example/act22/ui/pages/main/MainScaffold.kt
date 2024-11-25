@@ -55,7 +55,7 @@ fun MainScaffold(
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 42.dp, bottom = 75.dp),
+                .padding(top = 42.dp, bottom = 60.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ){

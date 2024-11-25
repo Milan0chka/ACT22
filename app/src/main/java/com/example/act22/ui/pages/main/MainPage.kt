@@ -1,6 +1,8 @@
 package com.example.act22.ui.pages.main
 
-import Asset
+import AssetManagerViewModel
+import android.util.Log
+import com.example.act22.data.model.Asset
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,12 +28,16 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,21 +53,42 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
 import androidx.navigation.NavController
 import com.example.act22.activity.Screen
-import cryptoAssets
-import techStocks
-
+import com.example.act22.data.model.AssetType
+import com.example.act22.data.model.SortingCriteria
+import com.example.act22.data.model.cryptoAssets
+import com.example.act22.data.model.techStocks
+import perfetto.protos.UiState
 
 @Composable
 fun CreateMainPage(
-    navController: NavController
-){
+    navController: NavController,
+    viewModel: AssetManagerViewModel
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchAllAssets()
+    }
+
     MainScaffold(navController) {
-        CustomSearchBar()
-        TypeSort()
-        AllAssets(navController)
+        CustomSearchBar { query -> viewModel.searchAssets(query) }
+        TypeSort(
+            onFilterStocks = { viewModel.filterAssetsByType(AssetType.STOCK) },
+            onFilterCryptos = { viewModel.filterAssetsByType(AssetType.CRYPTO) },
+            onFilterAll = { viewModel.filterAssetsByType(AssetType.ALL)},
+            onSort = { criteria -> viewModel.sortAssets(criteria) }
+        )
+        when (uiState) {
+            is AssetManagerViewModel.UiState.Error -> ErrorMessage((uiState as AssetManagerViewModel.UiState.Error).message)
+            is AssetManagerViewModel.UiState.Success ->
+                AssetList(
+                    navController,
+                    (uiState as AssetManagerViewModel.UiState.Success).assets
+                )
+            else -> LoadingSpinner()
+        }
     }
 }
-
 
 @Composable
 fun CustomSearchBar(onSearch: (String) -> Unit = {}) {
@@ -152,7 +179,12 @@ fun CompactTextField(
 
 
 @Composable
-fun TypeSort() {
+fun TypeSort(
+    onFilterStocks: () -> Unit,
+    onFilterCryptos: () -> Unit,
+    onFilterAll: () -> Unit,
+    onSort: (SortingCriteria) -> Unit
+) {
     val (expanded, setExpanded) = remember { mutableStateOf(false) }
 
     Row(
@@ -166,20 +198,28 @@ fun TypeSort() {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
 
-        SortButton(
+        SmallButton(
             title = "Stocks",
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(0.45f),
-            onClick = {} //todo
+                .weight(0.3f),
+            onClick = { onFilterStocks() }
         )
 
-        SortButton(
+        SmallButton(
             title = "Crypto",
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(0.45f),
-            onClick = {} //todo
+                .weight(0.3f),
+            onClick = { onFilterCryptos() }
+        )
+
+        SmallButton(
+            title = "All",
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(0.3f),
+            onClick = { onFilterAll() }
         )
 
         Box(
@@ -199,7 +239,11 @@ fun TypeSort() {
                     .padding(5.dp)
             )
 
-            CustomDropDownMenu(expanded, setExpanded)
+            CustomDropDownMenu(
+                expanded,
+                setExpanded,
+                onSort
+            )
         }
     }
 }
@@ -207,7 +251,8 @@ fun TypeSort() {
 @Composable
 fun CustomDropDownMenu(
     expanded: Boolean,
-    setExpanded: (Boolean) -> Unit
+    setExpanded: (Boolean) -> Unit,
+    onSort: (SortingCriteria) -> Unit
 ) {
     DropdownMenu(
         modifier = Modifier
@@ -218,9 +263,9 @@ fun CustomDropDownMenu(
         expanded = expanded,
         onDismissRequest = { setExpanded(false) }
     ) {
-        CustomDropDownItem("Cheaper first") { setExpanded(false) }
-        CustomDropDownItem("Expensive first") { setExpanded(false) }
-        CustomDropDownItem("New first") { setExpanded(false) }
+        CustomDropDownItem("Alphabetical order") { onSort(SortingCriteria.ALPHABET) }
+        CustomDropDownItem("Cheaper first") { onSort(SortingCriteria.ASC) }
+        CustomDropDownItem("Expensive first") { onSort(SortingCriteria.DESC) }
     }
 }
 
@@ -243,41 +288,37 @@ fun CustomDropDownItem(
 }
 
 @Composable
-fun SortButton(
-    title: String,
-    modifier: Modifier,
-    onClick: () -> Unit
-) {
-    Button(
-        modifier = modifier.padding(horizontal = 5.dp),
-        onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            contentColor = MaterialTheme.colorScheme.onSecondary
-        ),
-        shape = RoundedCornerShape(10.dp)
-    ) {
-        Text(title, style = MaterialTheme.typography.bodySmall)
+fun LoadingSpinner(){
+    Box (
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ){
+        CircularProgressIndicator(
+            color = MaterialTheme.colorScheme.primary,
+            strokeWidth = 4.dp
+        )
     }
 }
 
 @Composable
-fun AllAssets(
-    navController: NavController
+fun AssetList(
+    navController: NavController,
+    assets : List<Asset>
 ){
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
-        content = {
-            items(techStocks) { stock ->
-               MainAssetCard(navController,stock)
+    if(assets.isEmpty()){
+        ErrorMessage("No asset found!")
+    } else {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top,
+            content = {
+                items(assets) { asset ->
+                    MainAssetCard(navController,asset)
+                }
             }
-            items(cryptoAssets) { crypto ->
-                MainAssetCard(navController, crypto)
-            }
-        }
-    )
+        )
+    }
 }
 
 @Composable
@@ -289,16 +330,18 @@ fun MainAssetCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp)
-            .clickable { navController.navigate(Screen.AssetDetails.createRoute(asset.name)) },
+            .clickable { navController.navigate(Screen.AssetDetails.createRoute(asset.ID)) },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.5.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         AssetCardContent(asset)
     }
 }
+
+
 
 
 

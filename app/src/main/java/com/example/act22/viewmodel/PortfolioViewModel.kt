@@ -1,16 +1,16 @@
 package com.example.act22.viewmodel
 
-import Asset
-import Crypto
-import TechStock
+import com.example.act22.data.model.Asset
+import com.example.act22.data.model.Crypto
+import com.example.act22.data.model.TechStock
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
-import com.example.act22.data.Portfolio
-import cryptoAssets
-import techStocks
+import com.example.act22.data.model.Portfolio
+import com.example.act22.data.model.cryptoAssets
+import com.example.act22.data.model.techStocks
 
 class PortfolioViewModel(
-    initialPortfolio:Portfolio = Portfolio(1, mutableListOf(), mutableListOf())
+    initialPortfolio: Portfolio = Portfolio(1, mutableListOf(), mutableListOf())
 ) : ViewModel(){
     private val portfolio: Portfolio = initialPortfolio
     private val allPortfolioAssets = mutableSetOf<Asset>()
@@ -41,7 +41,7 @@ class PortfolioViewModel(
         return null
     }
 
-    fun getPortfolio():Portfolio{
+    fun getPortfolio(): Portfolio {
         return portfolio
     }
 
@@ -65,7 +65,7 @@ class PortfolioViewModel(
     }
 
 
-    fun addAssetToPortfolio(asset: Asset, onResult: ( String?) -> Unit){
+    fun addAssetToPortfolio(asset: Asset, onResult: (String?) -> Unit){
         if(asset is Crypto){
             if(portfolio.cryptos.size >= 3)
                 onResult("Maximum number of cryptos have been added.")

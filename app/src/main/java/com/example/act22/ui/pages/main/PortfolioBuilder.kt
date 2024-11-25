@@ -1,6 +1,6 @@
 package com.example.act22.ui.pages.main
 
-import Asset
+import com.example.act22.data.model.Asset
 import android.widget.Toast
 import com.example.act22.ui.pages.authentication.DrawLogo
 
@@ -12,10 +12,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -26,9 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.act22.activity.Screen
 import com.example.act22.viewmodel.PortfolioViewModel
-import com.radusalagean.infobarcompose.InfoBarMessage
-import cryptoAssets
-import techStocks
+import com.example.act22.data.model.cryptoAssets
+import com.example.act22.data.model.techStocks
 
 
 @Composable

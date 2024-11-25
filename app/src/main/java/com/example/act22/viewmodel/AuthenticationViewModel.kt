@@ -1,24 +1,12 @@
 package com.example.act22.viewmodel
 
-import android.app.Activity
 import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
-import com.example.act22.R
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.auth
-import com.google.firebase.firestore.FirebaseFirestore
 
 class AuthenticationViewModel : ViewModel() {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -83,6 +71,7 @@ class AuthenticationViewModel : ViewModel() {
             onResult(false, it)
             return
         }
+        //TODO check whether email is confirmed
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -123,54 +112,11 @@ class AuthenticationViewModel : ViewModel() {
             }
     }
 
-    fun signOut(onResult: () -> Unit) {
+    fun signOut() {
         auth.signOut()
-        onResult()
     }
-
 
     fun checkIfUserIsLoggedIn(): Boolean {
         return auth.currentUser != null
     }
-
-    fun isEmailConfirmed(onResult: (Boolean) -> Unit) {
-        val user = auth.currentUser
-        user?.reload()?.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                onResult(user.isEmailVerified)
-            } else {
-                onResult(false)
-            }
-        } ?: onResult(false)
-    }
-
-    // Step 3.1: Configure Google Sign-In client
-    fun getGoogleSignInClient(activity: Activity): GoogleSignInClient {
-        val googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(activity.getString(R.string.default_web_client_id)) // OAuth client ID
-            .requestEmail()
-            .build()
-
-        return GoogleSignIn.getClient(activity, googleSignInOptions)
-    }
-
-    // Step 3.2: Firebase Authentication with Google
-    fun firebaseAuthWithGoogle(account: GoogleSignInAccount, onResult: (Boolean, FirebaseUser?) -> Unit) {
-        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Sign in success
-                    val user = auth.currentUser
-                    Log.d("GoogleSignIn", "signInWithCredential:success, user: ${user?.email}")
-                    onResult(true, user)
-                } else {
-                    // Sign in failure
-                    Log.e("GoogleSignIn", "signInWithCredential:failure", task.exception)
-                    onResult(false, null)
-                }
-            }
-    }
-
 }

@@ -102,20 +102,22 @@ fun UserInfoField(
 fun UserWaletAndPlan(){
     var selectedTab by remember { mutableStateOf(0) }
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
     ) {
-        TabRow(selectedTabIndex = selectedTab) {
+        TabRow(
+            selectedTabIndex = selectedTab,
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondary
+        ) {
             Tab(
                 selected = selectedTab == 0,
                 onClick = { selectedTab = 0 },
-                text = { Text("Wallet") }
+                text = { Text("Wallet", style = MaterialTheme.typography.bodySmall) }
             )
             Tab(
                 selected = selectedTab == 1,
                 onClick = { selectedTab = 1 },
-                text = { Text("Plan Management") }
+                text = { Text("Plan Management", style = MaterialTheme.typography.bodySmall) }
             )
         }
 

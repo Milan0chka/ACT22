@@ -1,6 +1,6 @@
 package com.example.act22.ui.pages.main
 
-import Asset
+import com.example.act22.data.model.Asset
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

@@ -1,8 +1,8 @@
 package com.example.act22.ui.pages.main
 
-import Asset
-import Crypto
-import TechStock
+import com.example.act22.data.model.Asset
+import com.example.act22.data.model.Crypto
+import com.example.act22.data.model.TechStock
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -66,6 +66,7 @@ fun AssetImage(asset: Asset) {
         AsyncImage(
             model = asset.iconUrl,
             contentDescription = "${asset.name} logo",
+            placeholder = painterResource(R.drawable.logo_bright) ,
             error = painterResource(R.drawable.logo_dark),
             onError = { println("Error loading image for ${asset.name}") },
             contentScale = ContentScale.Fit,
@@ -92,23 +93,46 @@ fun AssetDetails(asset: Asset) {
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(asset.name, style = MaterialTheme.typography.bodyLarge)
-        Text("Price: $${String.format("%.2f", asset.price)}", style = MaterialTheme.typography.bodyMedium)
+        Text(
+            text = asset.name,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Text(
+            text = "Price: $${String.format("%.2f", asset.price)}",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
 
         when (asset) {
             is TechStock -> {
-                Text("Market Cap: ${formatLargeNumber(asset.marketCap)}", style = MaterialTheme.typography.bodyMedium)
-                Text("Sector: ${asset.sector}", style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = "Market Cap: ${formatLargeNumber(asset.marketCap)}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = "Sector: ${asset.sector}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             }
             is Crypto -> {
-                Text("Blockchain: ${asset.blockchain}", style = MaterialTheme.typography.bodyMedium)
-                Text("Market Dominance: ${asset.marketDominance}%", style = MaterialTheme.typography.bodyMedium)
-            }
-
-            else -> {}
+                Text(
+                    text = "Blockchain: ${asset.blockchain}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = "Market Dominance: ${asset.marketDominance}%",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+              }
         }
     }
 }
+
 
 
 
@@ -168,6 +192,27 @@ fun BigButton(prompt: String, onClick: () -> Unit) {
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSecondary
         )
+    }
+}
+
+@Composable
+fun SmallButton(
+    title: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.secondary,
+    contentColor: Color = MaterialTheme.colorScheme.onSecondary
+) {
+    Button(
+        modifier = modifier.padding(horizontal = 5.dp),
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = color,
+            contentColor = contentColor
+        ),
+        shape = RoundedCornerShape(10.dp)
+    ) {
+        Text(title, style = MaterialTheme.typography.bodySmall)
     }
 }
 
@@ -295,6 +340,22 @@ fun VerticalTabItem(label: String, onClick: () -> Unit) {
 
 fun generateRandomStockPrices(size: Int): List<Float> {
     return List(size) { Random.nextFloat() * 1000f }
+}
+
+@Composable
+fun ErrorMessage(
+    text: String
+){
+    Box (
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ){
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+    }
 }
 
 

@@ -53,8 +53,8 @@ private val DarkColorScheme = darkColorScheme(
     onTertiary = White,
     onTertiaryContainer = DarkPurple60,
     onBackground = White,
-    onSurface = Purple40,
-    onSurfaceVariant = Lilac40
+    onSurface = Purple20,
+    onSurfaceVariant = Lilac20
 )
 
 @Composable

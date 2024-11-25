@@ -1,7 +1,4 @@
-package com.example.act22.data
-
-import Crypto
-import TechStock
+package com.example.act22.data.model
 
 data class Portfolio(
     val userID: Int,

@@ -23,9 +23,8 @@ fun LandingPage(
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         if (authenticationViewModel.checkIfUserIsLoggedIn()) {
-            authenticationViewModel.signOut {
-                Toast.makeText(context, "You have been logged out", Toast.LENGTH_SHORT).show()
-            }
+            authenticationViewModel.signOut()
+            Toast.makeText(context, "You have been logged out", Toast.LENGTH_SHORT).show()
         }
     }
 

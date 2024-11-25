@@ -1,13 +1,14 @@
 package com.example.act22.activity
 
 
+import com.example.act22.viewmodel.AIViewModel
+import AssetManagerViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,6 +31,7 @@ import com.example.act22.ui.pages.main.SupportPage
 import com.example.act22.ui.pages.main.UserPortfolio
 import com.example.act22.ui.pages.main.UserProfile
 import com.example.act22.ui.theme.ACT22Theme
+import com.example.act22.viewmodel.AssetPriceViewModel
 import com.example.act22.viewmodel.PortfolioViewModel
 
 sealed class Screen(val route: String) {
@@ -47,9 +49,9 @@ sealed class Screen(val route: String) {
     object SupportEmail : Screen("Support_Email")
     object Feedback : Screen("Feedback")
     object Options : Screen("Options")
-    object AssetDetails : Screen("details/{name}") {
-        fun createRoute(name: String): String {
-            return "details/$name"
+    object AssetDetails : Screen("details/{ID}") {
+        fun createRoute(ID: String): String {
+            return "details/$ID"
         }
     }
 }
@@ -59,6 +61,9 @@ class MainActivity : ComponentActivity() {
 
     private val authViewModel: AuthenticationViewModel by viewModels()
     private val portfolioViewModel: PortfolioViewModel by viewModels()
+    private val assetManagerViewModel: AssetManagerViewModel by viewModels()
+    private val assetPriceViewModel: AssetPriceViewModel by viewModels()
+    private val aiViewModel: AIViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +77,10 @@ class MainActivity : ComponentActivity() {
                 NavigationSetUp(
                     startScreen,
                     authViewModel,
-                    portfolioViewModel
+                    portfolioViewModel,
+                    assetManagerViewModel,
+                    assetPriceViewModel,
+                    aiViewModel
                 )
             }
         }
@@ -83,7 +91,10 @@ class MainActivity : ComponentActivity() {
 fun NavigationSetUp(
     startScreen : String,
     authenticationViewModel: AuthenticationViewModel,
-    portfolioViewModel: PortfolioViewModel
+    portfolioViewModel: PortfolioViewModel,
+    assetManagerViewModel: AssetManagerViewModel,
+    assetPriceViewModel: AssetPriceViewModel,
+    aiViewModel: AIViewModel
 ){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.MainPage.route, builder = {
@@ -124,7 +135,10 @@ fun NavigationSetUp(
             )
         }
         composable(Screen.MainPage.route) {
-            CreateMainPage(navController)
+            CreateMainPage(
+                navController,
+                assetManagerViewModel
+            )
         }
         composable(Screen.Portfolio.route) {
             UserPortfolio(
@@ -153,14 +167,17 @@ fun NavigationSetUp(
 
         composable(
             Screen.AssetDetails.route,
-            arguments = listOf(navArgument("name") { type = NavType.StringType })
+            arguments = listOf(navArgument("ID") { type = NavType.StringType })
         ) { backStackEntry ->
-            val name = backStackEntry.arguments?.getString("name")
-            if (name != null) {
+            val id = backStackEntry.arguments?.getString("ID")
+            if (id != null) {
                 AssetDetails(
                     navController,
+                    assetPriceViewModel,
                     portfolioViewModel,
-                    name)
+                    aiViewModel,
+                    id
+                )
             }
         }
 
