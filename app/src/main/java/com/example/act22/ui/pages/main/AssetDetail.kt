@@ -134,7 +134,7 @@ fun AssetActions(
     asset: Asset,
     modifier: Modifier
 ){
-    var isInPortfolio = true;
+    var isInPortfolio = false;
 
     Row(
         modifier = modifier

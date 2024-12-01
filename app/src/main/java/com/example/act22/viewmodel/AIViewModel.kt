@@ -4,12 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.act22.data.repository.AiRepository
 import com.example.act22.data.repository.AiRepositoryTestImp
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 
-
+//todo specify dispacher
 class AIViewModel(
     private val repository: AiRepository = AiRepositoryTestImp()
 ) : ViewModel() {
@@ -31,7 +33,7 @@ class AIViewModel(
 
     fun fetchAssetAnalysis(assetId: String) {
         _analysisState.value = UiState.Loading
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = repository.fetchAssetAnalysis(assetId)
                 _analysisState.value = UiState.Success(listOf(result))
@@ -43,7 +45,7 @@ class AIViewModel(
 
     fun fetchAssetPricePrediction(assetId: String) {
         _predictionState.value = UiState.Loading
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = repository.fetchAssetPricePrediction(assetId)
                 _predictionState.value = UiState.Success(result)
@@ -55,7 +57,7 @@ class AIViewModel(
 
     fun fetchPortfolioRecommendation() {
         _recommendationState.value = UiState.Loading
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = repository.fetchPortfolioRecommendation()
                 _recommendationState.value = UiState.Success(result)

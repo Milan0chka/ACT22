@@ -11,7 +11,7 @@ import kotlin.jvm.Throws
 import kotlin.random.Random
 
 class AssetRepositoryTestImp : AssetRepository {
-    private val assets: List<Asset> = techStocks + cryptoAssets
+    private val assets: List<Asset> = (techStocks + cryptoAssets).sortedBy { it.name }
 
     override suspend fun getAllAssets(): List<Asset> {
         return assets

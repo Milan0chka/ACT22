@@ -44,11 +44,11 @@ val techStocks = listOf(
     TechStock("NVDA", "NVIDIA", 500.60, "https://upload.wikimedia.org/wikipedia/en/thumb/9/99/Nvidia_logo.svg/768px-Nvidia_logo.svg.png", 0.6E12, "Semiconductors"),
     TechStock("META", "Meta", 320.50, "https://upload.wikimedia.org/wikipedia/commons/0/0f/Meta_Platforms_Inc._logo.png", 1.0E12, "Social Media"),
     TechStock("INTC", "Intel", 58.80, "https://upload.wikimedia.org/wikipedia/commons/c/c9/Intel-logo.png", 0.2E12, "Semiconductors"),
-    TechStock("AMD", "AMD", 110.70, "https://upload.wikimedia.org/wikipedia/commons/5/50/AMD_logo.png", 0.15E12, "Semiconductors"),
+    TechStock("AMD", "AMD", 110.70, "https://banner2.cleanpng.com/20180403/dkq/avhnmjq47.webp", 0.15E12, "Semiconductors"),
     TechStock("IBM", "IBM", 145.30, "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.png", 0.11E12, "Cloud & AI"),
     TechStock("CSCO", "Cisco", 55.20, "https://upload.wikimedia.org/wikipedia/commons/6/64/Cisco-logo.png", 0.2E12, "Networking"),
     TechStock("ORCL", "Oracle", 90.30, "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Oracle_logo.svg/2560px-Oracle_logo.svg.png", 0.3E12, "Enterprise Software"),
-    TechStock("ADBE", "Adobe", 630.40, "https://upload.wikimedia.org/wikipedia/commons/3/31/Adobe_Systems_logo_and_wordmark.png", 0.4E12, "Creative Software")
+    TechStock("ADBE", "Adobe", 630.40, "https://i.pinimg.com/736x/56/3a/a2/563aa2189ef92dc242a7db5b91078804.jpg", 0.4E12, "Creative Software")
 )
 
 // Updated sample crypto assets with the correct order for `iconUrl`

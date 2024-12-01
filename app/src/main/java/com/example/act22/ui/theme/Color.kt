@@ -2,9 +2,9 @@ package com.example.act22.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val White = Color(0xFFEEEEEE)
-val Grey20 = Color(0xFFECECEC)
-val Grey40 = Color(0xFFCCCCCC)
+val White = Color(0xFFF8F8F8)
+val Grey20 = Color(0xFFE3E3E3)
+val Grey40 = Color(0xFFC7C7C7)
 val Grey60 = Color(0xFF505050)
 val Grey80 = Color(0xFF3F3F3F)
 val Black = Color(0xFF282828)

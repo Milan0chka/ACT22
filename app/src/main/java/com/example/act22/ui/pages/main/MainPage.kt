@@ -186,6 +186,7 @@ fun TypeSort(
     onSort: (SortingCriteria) -> Unit
 ) {
     val (expanded, setExpanded) = remember { mutableStateOf(false) }
+    val selectedButton = remember { mutableStateOf<String>("All") }
 
     Row(
         modifier = Modifier
@@ -197,13 +198,16 @@ fun TypeSort(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-
         SmallButton(
             title = "Stocks",
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(0.3f),
-            onClick = { onFilterStocks() }
+            color = if (selectedButton.value == "Stocks") MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.secondary,
+            onClick = {
+                selectedButton.value = "Stocks"
+                onFilterStocks()
+            }
         )
 
         SmallButton(
@@ -211,7 +215,11 @@ fun TypeSort(
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(0.3f),
-            onClick = { onFilterCryptos() }
+            color = if (selectedButton.value == "Crypto") MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.secondary,
+            onClick = {
+                selectedButton.value = "Crypto"
+                onFilterCryptos()
+            }
         )
 
         SmallButton(
@@ -219,7 +227,11 @@ fun TypeSort(
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(0.3f),
-            onClick = { onFilterAll() }
+            color = if (selectedButton.value == "All") MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.secondary,
+            onClick = {
+                selectedButton.value = "All"
+                onFilterAll()
+            }
         )
 
         Box(
@@ -241,8 +253,11 @@ fun TypeSort(
 
             CustomDropDownMenu(
                 expanded,
-                setExpanded,
-                onSort
+                onDismiss = {
+                    setExpanded(false)
+                    selectedButton.value = "All"
+                },
+                onSort = onSort
             )
         }
     }
@@ -251,7 +266,7 @@ fun TypeSort(
 @Composable
 fun CustomDropDownMenu(
     expanded: Boolean,
-    setExpanded: (Boolean) -> Unit,
+    onDismiss: () -> Unit,
     onSort: (SortingCriteria) -> Unit
 ) {
     DropdownMenu(
@@ -261,13 +276,23 @@ fun CustomDropDownMenu(
         offset = DpOffset(0.dp, 5.dp),
         properties = PopupProperties(focusable = true),
         expanded = expanded,
-        onDismissRequest = { setExpanded(false) }
+        onDismissRequest = onDismiss
     ) {
-        CustomDropDownItem("Alphabetical order") { onSort(SortingCriteria.ALPHABET) }
-        CustomDropDownItem("Cheaper first") { onSort(SortingCriteria.ASC) }
-        CustomDropDownItem("Expensive first") { onSort(SortingCriteria.DESC) }
+        CustomDropDownItem("Alphabetical order") {
+            onSort(SortingCriteria.ALPHABET)
+            onDismiss()
+        }
+        CustomDropDownItem("Cheaper first") {
+            onSort(SortingCriteria.ASC)
+            onDismiss()
+        }
+        CustomDropDownItem("Expensive first") {
+            onSort(SortingCriteria.DESC)
+            onDismiss()
+        }
     }
 }
+
 
 @Composable
 fun CustomDropDownItem(
@@ -335,7 +360,7 @@ fun MainAssetCard(
             containerColor = MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         AssetCardContent(asset)
     }
